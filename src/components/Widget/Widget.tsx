@@ -1,18 +1,18 @@
-import {ActivityIndicator, StyleSheet, View, FlatList, Pressable, Image, Text} from 'react-native';
+import {ActivityIndicator, StyleSheet, View, FlatList, Pressable, Image, Text, TouchableOpacity} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import { PokemonList } from './Widget.types';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 
-function Widget({navigation}){
-
-    const [isLoading, setLoading]= useState(true);
-    const [data, setData] = useState<PokemonList[]>([]);
+function Widget(){
+    
+   const navigation = useNavigation();
+   const [isLoading, setLoading]= useState(true);
+   const [data, setData] = useState<PokemonList[]>([]);
 
     const getPokemon = async () => {
         try{
             const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0');
             const json = await response.json();
-            console.log("Json => ", json.results);
             setData(json.results); 
         } catch(error) {
             console.error(error);
@@ -29,6 +29,19 @@ function Widget({navigation}){
         getPokemon();
     }, []);
 
+
+   /*const getPokemonDetails = () =>{
+        try{
+            const response = await fetch(urlPokemon);
+            const json = await response.json();
+            setData(json.results); 
+        } catch(error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    }*/
+
     return (
         <View style={styles.container}>
             <Image source={require('../../Images/pokeball_s.png')}></Image>
@@ -42,16 +55,20 @@ function Widget({navigation}){
                         data={data} 
                         keyExtractor={({name}) => name} 
                         renderItem={({item}) => (
-                        <Text style={styles.flatlist}> 
-                            {"\n"}
-                            {item.name}
-                            {"\n"}
-                        </Text> )}
+                        <TouchableOpacity onPress={() => navigation.navigate('PokemonProfileScreen', { url: item.url })}>
+                            <Text style={styles.flatlist}> 
+                                {"\n"}
+                                {item.name}
+                                {"\n"}
+                            </Text> 
+                        </TouchableOpacity>
+                        )}
                     /> 
                 </>
             )}
         </View>
     );
+    
 };
 
 const styles = StyleSheet.create({
