@@ -1,17 +1,19 @@
-import {ActivityIndicator, StyleSheet, View, FlatList, Pressable, Image, Text, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, FlatList, Image, Text, TouchableOpacity} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import { PokemonList } from './Widget.types';
 import { useNavigation } from '@react-navigation/native';
+import * as Animatable from 'react-native-animatable';
 
 function Widget(){
     
    const navigation = useNavigation();
    const [isLoading, setLoading]= useState(true);
    const [data, setData] = useState<PokemonList[]>([]);
+   const [itemsToLoad, setItemsToLoad] = useState(8);
 
     const getPokemon = async () => {
         try{
-            const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0');
+            const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${itemsToLoad}&offset=0`);
             const json = await response.json();
             setData(json.results); 
         } catch(error) {
@@ -21,32 +23,21 @@ function Widget(){
         }
     };
 
-    /*useEffect(() => {
-        console.log("data => ", typeof data);
-    }, [data]);*/
-
     useEffect(() => {
         getPokemon();
-    }, []);
+    }, [itemsToLoad]);
 
 
-   /*const getPokemonDetails = () =>{
-        try{
-            const response = await fetch(urlPokemon);
-            const json = await response.json();
-            setData(json.results); 
-        } catch(error) {
-            console.error(error);
-        } finally {
-            setLoading(false);
-        }
-    }*/
+    const handleLoadMore = () =>{
+        setItemsToLoad(itemsToLoad + 8);
+    }
 
     return (
         <View style={styles.container}>
             <Image source={require('../../Images/pokeball_s.png')}></Image>
             {isLoading ? ( 
-                <ActivityIndicator />
+                <Animatable.Image source={require('../../Images/pokeball_s.png')} style={styles.loadingIndicator} 
+                animation="rotate" iterationCount="infinite" duration={1000}/>
             ) : (
                 <>
                     <FlatList decelerationRate={0.6}
@@ -64,6 +55,9 @@ function Widget(){
                         </TouchableOpacity>
                         )}
                     /> 
+                    <TouchableOpacity style={styles.button} onPress={handleLoadMore}>
+                        <Text>Load More</Text>
+                    </TouchableOpacity>
                 </>
             )}
         </View>
@@ -95,6 +89,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 10, 
         margin: 16,
-    }
+    },
+    loadingIndicator: {
+        width: 50,
+        height: 50,
+      },
 });
 export default Widget;

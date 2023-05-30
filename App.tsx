@@ -1,12 +1,16 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { StyleSheet } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { faHome, faSearch, faHeart } from 'react-native-vector-icons/FontAwesome';
+FontAwesome.loadFont();
+
+//Navigation Imports 
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/Ionicons';
 
 //Screen Imports
-import StartScreen from './src/screens/StartScreen';
+import SplashScreen from './src/screens/SplashScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import PokemonProfileScreen from './src/screens/PokemonProfileScreen';
 import SearchScreen from './src/screens/SearchScreen';
@@ -16,26 +20,61 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 function App(){
+
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowSplash(false);
+    }, 2000);
+  }, []);
+
   return (
-    <NavigationContainer>
-      <Tab.Navigator screenOptions={tabBarOptions}>
-        <Tab.Screen name="Home" component={HomeStack} options={{ tabBarVisible: false, tabBarButton: () => null }}/>
-        <Tab.Screen name="Search" component={SearchScreen} />
-        <Tab.Screen name="Favorites" component={FavoritesScreen} />
-      </Tab.Navigator>
+    <NavigationContainer theme={DefaultTheme}>
+      {showSplash ? (
+        <SplashScreen />
+      ) : (
+        <Stack.Navigator initialRouteName="TabNavigator" screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="TabNavigator" component={TabNavigator} />
+          <Stack.Screen name="PokemonProfileScreen" component={PokemonProfileScreen} />
+        </Stack.Navigator>
+      )}
     </NavigationContainer>
   );
 }
 
-const HomeStack = () =>{
-  return(
-    <Stack.Navigator>
-        <Stack.Screen name="Start" component={StartScreen} options={{headerShown: false}}/>
-        <Stack.Screen name="Home" component={HomeScreen}/>
-        <Stack.Screen name="PokemonProfileScreen" component={PokemonProfileScreen}/>
-      </Stack.Navigator>
-  )
-}
+const TabNavigator = () => {
+
+  const tabOptions = {
+    tabBarStyle: styles.tabBar,
+    tabBarLabelStyle: styles.tabLabel,
+    tabBarActiveTintColor: '#e74716',
+    tabBarInactiveTintColor: '#FF825C',
+  };
+
+  const tabIcons = {
+    Home: faHome,
+    Search: faSearch,
+    Favorites: faHeart,
+  };
+
+  return (
+    <Tab.Navigator 
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          const iconName = tabIcons[route.name];
+          return <FontAwesome name={iconName} size={size} color={color} />;
+        },
+        ...tabOptions,
+      })}
+    >
+      <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false, tabBarVisible: false }} />
+      <Tab.Screen name="Search" component={SearchScreen} options={{ headerShown: false, tabBarVisible: false }} />
+      <Tab.Screen name="Favorites" component={FavoritesScreen} options={{ headerShown: false, tabBarVisible: false }} />
+    </Tab.Navigator>
+  );
+};
+
 
 const styles = StyleSheet.create({
   tabBar:{
@@ -49,12 +88,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 })
-
-const tabBarOptions = {
-  activeTintColor:'#e74716',
-  inactiveTintColor: '#FF825C',
-  style:styles.tabBar,
-  labelStyle: styles.tabLabel,
-};
 
 export default App;

@@ -1,10 +1,13 @@
-import { ActivityIndicator, Image, StyleSheet, View, Text} from 'react-native';
+import { ActivityIndicator, Image, StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import React, {useState, useEffect} from 'react';
+import { useNavigation } from '@react-navigation/native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const PokemonProfileScreen = ({ route }) => {
 
     const [pokemonData, setPokemonData] = useState(null);
     const [isLoading, setLoading] = useState(true);
+    const navigation = useNavigation();
 
     useEffect(() => {
         const fetchPokemonData = async () => {
@@ -22,6 +25,10 @@ const PokemonProfileScreen = ({ route }) => {
         fetchPokemonData();
       }, []);
 
+      const handleGoBack = () => {
+        navigation.navigate('Home');
+      }
+
       if (isLoading) {
         return (
           <View>
@@ -32,6 +39,9 @@ const PokemonProfileScreen = ({ route }) => {
 
     return (
         <View style={styles.container}>
+          <TouchableOpacity style={styles.closeButton} onPress={handleGoBack}>
+            <FontAwesome name="times" size={20} color="#FFFFFF"/>
+          </TouchableOpacity>
           {pokemonData && (
             <View>
                 <Image source={{ uri: pokemonData.sprites.front_default}} style={{ width:200, height:200}} style={styles.image}/>
@@ -52,17 +62,25 @@ const styles = StyleSheet.create({
         alignItems:'center',
     },
     text:{
-        margin: 10, 
-        padding: 10,
+        marginTop: 15, 
+        padding: 15,
         borderRadius: 6,
         backgroundColor: '#FF825C',
     }, 
     image:{
-        margin: 10, 
+        marginTop: 100, 
         height: 150,
         borderRadius: 6,
         backgroundColor: '#FF825C',
-    }
+    },
+    closeButton: {
+      position: 'absolute',
+      top: 20,
+      right: 20,
+      padding: 20,
+      borderRadius: 6,
+      backgroundColor: '#FF825C',
+    },
 });
 
 export default PokemonProfileScreen;
