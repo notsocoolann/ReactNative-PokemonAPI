@@ -1,8 +1,7 @@
-import {StyleSheet, View, FlatList, Image, Text, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, FlatList, Image, Text, TouchableOpacity, ActivityIndicator} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import { PokemonList } from './Widget.types';
 import { useNavigation } from '@react-navigation/native';
-import * as Animatable from 'react-native-animatable';
 
 function Widget(){
     
@@ -13,7 +12,7 @@ function Widget(){
 
     const getPokemon = async () => {
         try{
-            const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${itemsToLoad}&offset=0`);
+            const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=8&offset=${itemsToLoad}`);
             const json = await response.json();
             setData(json.results); 
         } catch(error) {
@@ -31,13 +30,16 @@ function Widget(){
     const handleLoadMore = () =>{
         setItemsToLoad(itemsToLoad + 8);
     }
+    
+    const handleGoBack = () =>{
+        setItemsToLoad(itemsToLoad - 8);
+    }
 
     return (
         <View style={styles.container}>
             <Image source={require('../../Images/pokeball_s.png')}></Image>
             {isLoading ? ( 
-                <Animatable.Image source={require('../../Images/pokeball_s.png')} style={styles.loadingIndicator} 
-                animation="rotate" iterationCount="infinite" duration={1000}/>
+                <ActivityIndicator />
             ) : (
                 <>
                     <FlatList decelerationRate={0.6}
@@ -55,9 +57,14 @@ function Widget(){
                         </TouchableOpacity>
                         )}
                     /> 
-                    <TouchableOpacity style={styles.button} onPress={handleLoadMore}>
-                        <Text>Load More</Text>
-                    </TouchableOpacity>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <TouchableOpacity style={styles.button} onPress={handleGoBack}>
+                            <Text>Previous Page</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={handleLoadMore}>
+                            <Text>Next Page</Text>
+                        </TouchableOpacity>
+                    </View>
                 </>
             )}
         </View>
@@ -91,8 +98,8 @@ const styles = StyleSheet.create({
         margin: 16,
     },
     loadingIndicator: {
-        width: 50,
-        height: 50,
+        width: 100,
+        height: 100,
       },
 });
 export default Widget;

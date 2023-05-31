@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { faHome, faSearch, faHeart } from 'react-native-vector-icons/FontAwesome';
-FontAwesome.loadFont();
 
 //Navigation Imports 
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
@@ -53,9 +52,9 @@ const TabNavigator = () => {
   };
 
   const tabIcons = {
-    Home: faHome,
-    Search: faSearch,
-    Favorites: faHeart,
+    Home: 'home',
+    Search: 'search',
+    Favorites: 'heart',
   };
 
   return (
@@ -63,7 +62,7 @@ const TabNavigator = () => {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           const iconName = tabIcons[route.name];
-          return <FontAwesome name={iconName} size={size} color={color} />;
+          return <FontAwesome name={iconName} size={size} color={color} style={{ fontFamily: 'FontAwesome' }} />;
         },
         ...tabOptions,
       })}

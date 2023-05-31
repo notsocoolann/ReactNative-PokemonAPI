@@ -2,6 +2,7 @@ import { ActivityIndicator, Image, StyleSheet, View, Text, TouchableOpacity} fro
 import React, {useState, useEffect} from 'react';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import * as Animatable from 'react-native-animatable';
 
 const PokemonProfileScreen = ({ route }) => {
 
@@ -32,7 +33,7 @@ const PokemonProfileScreen = ({ route }) => {
       if (isLoading) {
         return (
           <View>
-            <ActivityIndicator />
+            <Animatable.Image source={require('../Images/pokeball.png')} animation="rotate" iterationCount="infinite" duration={1000} style={styles.loading}/>
           </View>
         );
     }
@@ -43,10 +44,10 @@ const PokemonProfileScreen = ({ route }) => {
             <FontAwesome name="times" size={20} color="#FFFFFF"/>
           </TouchableOpacity>
           {pokemonData && (
-            <View>
+            <View >
+                <Text style={styles.pokemonName}>{pokemonData.name}</Text>
                 <Image source={{ uri: pokemonData.sprites.front_default}} style={{ width:200, height:200}} style={styles.image}/>
                     <View style={styles.text}>
-                        <Text style={{fontSize:20}}>Name: {pokemonData.name}</Text>
                         <Text style={{fontSize:20}}>Height: {pokemonData.height}</Text>
                         <Text style={{fontSize:20}}>Weight: {pokemonData.weight}</Text>
                     </View>
@@ -58,20 +59,25 @@ const PokemonProfileScreen = ({ route }) => {
 
 const styles = StyleSheet.create({
     container:{
-        flex:1,
-        alignItems:'center',
+      flex:1,
+      alignItems:'center',
+    },
+    pokemonName:{
+      marginTop: 100, 
+      fontSize:20,
+      padding:15,
     },
     text:{
-        marginTop: 15, 
-        padding: 15,
-        borderRadius: 6,
-        backgroundColor: '#FF825C',
+      marginTop: 15, 
+      padding: 15,
+      borderRadius: 6,
+      backgroundColor: '#FF825C',
     }, 
     image:{
-        marginTop: 100, 
-        height: 150,
-        borderRadius: 6,
-        backgroundColor: '#FF825C',
+      marginTop: 20, 
+      height: 150,
+      borderRadius: 6,
+      backgroundColor: '#FF825C',
     },
     closeButton: {
       position: 'absolute',
@@ -81,6 +87,13 @@ const styles = StyleSheet.create({
       borderRadius: 6,
       backgroundColor: '#FF825C',
     },
+    loading:{
+      margin: 150,
+      height: 100,
+      width: 100, 
+      alignItems: 'center',
+      justifyContent: 'center',
+    }
 });
 
 export default PokemonProfileScreen;
