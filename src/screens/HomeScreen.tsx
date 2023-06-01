@@ -1,10 +1,21 @@
-import { StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, View} from 'react-native';
 import React, { useState } from 'react';
-import { Widget } from '../components';
+import { Widget, SearchBar} from '../components';
 
 export default function HomeScreen() {
+  const [searchQuery, setSearchQuery] = useState('');
 
-  return (<Widget/>);
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
+
+  return (
+    <View style={styles.container}>
+      <SearchBar onSearch={handleSearch} />
+      <Widget searchQuery={searchQuery} />
+    </View>
+  );
+
 }
 
 const styles = StyleSheet.create({
@@ -15,13 +26,5 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 30,
-  },
-  searchBar: {
-    height: 40,
-    width: '80%',
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 16,
-    paddingLeft: 10,
   },
 });

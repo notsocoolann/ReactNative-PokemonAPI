@@ -1,2 +1,3 @@
 import Widget from "./Widget/Widget";
-export {Widget}
+import SearchBar from "./SearchBar/SearchBar";
+export {Widget, SearchBar}

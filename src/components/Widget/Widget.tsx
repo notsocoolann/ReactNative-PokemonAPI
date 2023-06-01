@@ -3,7 +3,6 @@ import React, {useState, useEffect} from 'react';
 import { PokemonList } from './Widget.types';
 import { useNavigation } from '@react-navigation/native';
 
-
 function Widget(){
     
    const navigation = useNavigation();
