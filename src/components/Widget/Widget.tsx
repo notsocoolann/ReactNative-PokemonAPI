@@ -3,6 +3,7 @@ import React, {useState, useEffect} from 'react';
 import { PokemonList } from './Widget.types';
 import { useNavigation } from '@react-navigation/native';
 
+
 function Widget(){
     
    const navigation = useNavigation();
@@ -35,6 +36,7 @@ function Widget(){
         setItemsToLoad(itemsToLoad - 8);
     }
 
+
     return (
         <View style={styles.container}>
             <Image source={require('../../Images/pokeball_s.png')}></Image>
@@ -42,7 +44,7 @@ function Widget(){
                 <ActivityIndicator />
             ) : (
                 <>
-                    <FlatList decelerationRate={0.6}
+                    <FlatList 
                         key={2}
                         numColumns={2}
                         data={data} 

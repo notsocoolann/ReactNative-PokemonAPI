@@ -41,16 +41,18 @@ const PokemonProfileScreen = ({ route }) => {
     return (
         <View style={styles.container}>
           <TouchableOpacity style={styles.closeButton} onPress={handleGoBack}>
-            <FontAwesome name="times" size={20} color="#FFFFFF"/>
+            <Text>X</Text>
           </TouchableOpacity>
           {pokemonData && (
-            <View >
+            <View>
                 <Text style={styles.pokemonName}>{pokemonData.name}</Text>
-                <Image source={{ uri: pokemonData.sprites.front_default}} style={{ width:200, height:200}} style={styles.image}/>
-                    <View style={styles.text}>
-                        <Text style={{fontSize:20}}>Height: {pokemonData.height}</Text>
-                        <Text style={{fontSize:20}}>Weight: {pokemonData.weight}</Text>
-                    </View>
+                <View style={styles.image}>
+                  <Image source={{ uri: pokemonData.sprites.front_default}} style={{ width:200, height:200}}/>
+                  <View style={styles.image}>
+                      <Text style={{fontSize:20}}>Height: {pokemonData.height}</Text>
+                      <Text style={{fontSize:20}}>Weight: {pokemonData.weight}</Text>
+                  </View>
+                </View>
             </View>
           )}
         </View>
@@ -66,18 +68,24 @@ const styles = StyleSheet.create({
       marginTop: 100, 
       fontSize:20,
       padding:15,
+      fontWeight: '600',
+      textAlign: 'center',
     },
     text:{
       marginTop: 15, 
       padding: 15,
+      width: 350,
       borderRadius: 6,
       backgroundColor: '#FF825C',
+      alignItems: 'center',
     }, 
     image:{
       marginTop: 20, 
-      height: 150,
+      height: 200,
+      width: 350,
       borderRadius: 6,
       backgroundColor: '#FF825C',
+      alignItems: 'center',
     },
     closeButton: {
       position: 'absolute',
