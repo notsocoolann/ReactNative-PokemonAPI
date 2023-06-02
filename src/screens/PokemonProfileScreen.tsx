@@ -1,7 +1,6 @@
 import { ActivityIndicator, Image, StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import { useNavigation } from '@react-navigation/native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import * as Animatable from 'react-native-animatable';
 
 const PokemonProfileScreen = ({ route }) => {

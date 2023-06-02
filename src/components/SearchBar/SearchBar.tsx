@@ -11,7 +11,7 @@ const SearchBar: React.FC = () => {
     useEffect(() =>{
         const search = async () => {
             try{
-                const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=20&offset=0`);
+                const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=1281&offset=0`);
                 const data = await response.json();
                 setSearchResults(data.results);
             } catch (error) {
@@ -29,12 +29,16 @@ const SearchBar: React.FC = () => {
     const handleSelectPokemon = (url: string) => {
         navigation.navigate('PokemonProfileScreen', { url });
     };
+
+    const filteredResults = searchResults.filter((item) =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
     
     return (
         <View style={styles.container}>
         <View style={styles.searchBarContainer}>
           <TouchableOpacity onPress={() => console.log('Open search bar')}>
-            <Image source={require('../../Images/lupa.png')} style={styles.searchIcon} />
+            <Image source={require('../../Images/pokeball.png')} style={styles.searchIcon} />
           </TouchableOpacity>
           <TextInput
             style={styles.searchBar}
@@ -43,15 +47,18 @@ const SearchBar: React.FC = () => {
             value={searchQuery}
           />
         </View>
-        <FlatList
-          data={searchResults}
-          keyExtractor={(item) => item.name}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => handleSelectPokemon(item.url)}>
-              <Text>{item.name}</Text>
-            </TouchableOpacity>
-          )}
-        />
+        {searchQuery !== '' && (
+          <FlatList
+            data={filteredResults}
+            keyExtractor={(item) => item.name}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => handleSelectPokemon(item.url)}>
+                <Text style={styles.resultItem}>{item.name}</Text>
+              </TouchableOpacity>
+            )}
+            contentContainerStyle={styles.resultList}
+          />
+        )}
       </View> 
   );
 };
@@ -60,24 +67,37 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       padding: 16,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     searchBarContainer: {
       flexDirection: 'row',
       alignItems: 'center',
       marginBottom: 16,
-      width: 220,
     },
     searchIcon: {
-      width: 20,
-      height: 20,
+      width: 50,
+      height: 50,
       marginRight: 8,
     },
     searchBar: {
       flex: 1,
-      height: 40,
-      borderColor: 'gray',
-      borderWidth: 1,
+      height: 60,
+      borderColor: '#FF825C',
+      borderWidth: 2,
       paddingLeft: 10,
+      borderRadius: 30,
+    },
+    resultItem:{
+      padding: 10,
+      borderBottomWidth: 1,
+      borderBottomColor: '#FF825C',
+    },
+    resultList: {
+      flexGrow:1,
+      width: 300,
+      marginLeft:40,
+      marginTop: 16,
     },
 });
   

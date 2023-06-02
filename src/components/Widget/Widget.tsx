@@ -8,32 +8,36 @@ function Widget(){
    const navigation = useNavigation();
    const [isLoading, setLoading]= useState(true);
    const [data, setData] = useState<PokemonList[]>([]);
-   const [itemsToLoad, setItemsToLoad] = useState(8);
+   const [isLoadingMore, setLoadingMore] = useState(false);
+   const [hasMore, setHasMore] = useState(true);
+   
 
     const getPokemon = async () => {
         try{
-            const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=8&offset=${itemsToLoad}`);
+            const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=8&offset=${data.length}`);
             const json = await response.json();
-            setData(json.results); 
+            const newPokemon = json.results;
+            setData((prevData) => [...prevData, ...newPokemon]);
+            setHasMore(newPokemon.length > 0);
         } catch(error) {
             console.error(error);
         } finally {
             setLoading(false);
+            setLoadingMore(false);
         }
     };
 
     useEffect(() => {
         getPokemon();
-    }, [itemsToLoad]);
+    }, []);
 
 
-    const handleLoadMore = () =>{
-        setItemsToLoad(itemsToLoad + 8);
-    }
-    
-    const handleGoBack = () =>{
-        setItemsToLoad(itemsToLoad - 8);
-    }
+    const handleLoadMore = () => {
+        if (!isLoadingMore && hasMore) {
+          setLoadingMore(true);
+          getPokemon();
+        }
+      };
 
 
     return (
@@ -57,15 +61,11 @@ function Widget(){
                             </Text> 
                         </TouchableOpacity>
                         )}
+                        onEndReached={handleLoadMore}
+                        onEndReachedThreshold={0.5}
+                        ListFooterComponent={isLoadingMore && <ActivityIndicator />}
+                        contentContainerStyle={{ paddingRight: 0 }}
                     /> 
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <TouchableOpacity style={styles.button} onPress={handleGoBack}>
-                            <Text>Previous Page</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={handleLoadMore}>
-                            <Text>Next Page</Text>
-                        </TouchableOpacity>
-                    </View>
                 </>
             )}
         </View>
