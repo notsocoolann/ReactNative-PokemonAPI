@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { StyleSheet } from 'react-native';
-
-
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 //Navigation Imports 
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -47,7 +46,7 @@ const TabNavigator = () => {
     tabBarStyle: styles.tabBar,
     tabBarLabelStyle: styles.tabLabel,
     tabBarActiveTintColor: '#e74716',
-    tabBarInactiveTintColor: '#FF825C',
+    tabBarInactiveTintColor: '#ffb199',
   };
 
   const tabIcons = {
@@ -61,7 +60,7 @@ const TabNavigator = () => {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           const iconName = tabIcons[route.name];
-          return <icon></icon>;
+          return <FontAwesome name={iconName} size={size} color={color} />;;
         },
         ...tabOptions,
       })}
